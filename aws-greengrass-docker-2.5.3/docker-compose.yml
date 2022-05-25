@@ -1,0 +1,12 @@
+version: '3.7'
+ 
+services:
+  greengrass:
+    init: true
+    container_name: aws-iot-greengrass
+    image: amazon/aws-iot-greengrass:latest
+    volumes:
+      - ./greengrass-v2-credentials:/root/.aws/:ro 
+    env_file: .env
+    ports:
+      - "8883:8883"

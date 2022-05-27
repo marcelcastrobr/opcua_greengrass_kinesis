@@ -8,6 +8,8 @@ set -e
 #Disable job control so that all child processes run in the same process group as the parent
 set +m
 
+
+
 # Path that initial installation files are copied to
 INIT_JAR_PATH=/opt/greengrassv2
 #Default options
@@ -89,6 +91,11 @@ if [ ! -d $GGC_ROOT_PATH/alts/current/distro ]; then
 else
 	echo "Reusing existing Greengrass installation..."
 fi
+
+#Marcel
+echo "I am inside the greengrass-entrypoint!!!!"
+
+ls -l /root/.aws/
 
 #Make loader script executable
 echo "Making loader script executable..."

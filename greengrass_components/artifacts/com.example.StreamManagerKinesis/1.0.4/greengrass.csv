@@ -1,0 +1,9 @@
+,node,tag,level,device,measurements,unit,asset
+0,ns=7;s=::AsGlobalPV:DD1,PLC.DD1,1,PLC,DD1,MW,hawt
+1,ns=7;s=::AsGlobalPV:DD2,PLC.DD2,1,PLC,DD2,MW,hawt
+2,ns=7;s=::AsGlobalPV:DD3,PLC.DD3,1,PLC,DD3,MW,hawt
+3,ns=7;s=::AsGlobalPV:DK1,PLC.DK1,1,PLC,DK1,MW,hawt
+4,ns=7;s=::AsGlobalPV:DK2,PLC.DK2,1,PLC,DK2,MW,hawt
+5,ns=7;s=::AsGlobalPV:DK3,PLC.DK3,1,PLC,DK3,MW,hawt
+6,ns=7;s=::AsGlobalPV:DK4,PLC.DK4,1,PLC,DK4,MW,hawt
+7,ns=7;s=::AsGlobalPV:DKReal,PLC.DKReal,1,PLC,DKReal,MW,hawt

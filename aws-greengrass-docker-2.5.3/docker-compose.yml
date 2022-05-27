@@ -4,9 +4,14 @@ services:
   greengrass:
     init: true
     container_name: aws-iot-greengrass
-    image: amazon/aws-iot-greengrass:latest
+    #image: amazon/aws-iot-greengrass:2.5.3-0
+    build:
+      # context: where should docker-compose look for the Dockerfile?
+      # i.e. either a path to a directory containing a Dockerfile, or a url to a git repository
+      context: .
+      dockerfile: Dockerfile
     volumes:
-      - ./greengrass-v2-credentials:/root/.aws/:ro 
+      - ./greengrass-v2-credentials:/root/.aws/:ro
     env_file: .env
     ports:
       - "8883:8883"

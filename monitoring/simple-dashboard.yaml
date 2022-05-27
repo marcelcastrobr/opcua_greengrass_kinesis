@@ -1,0 +1,136 @@
+---
+AWSTemplateFormatVersion: "2010-09-09"
+
+Parameters:
+  DashboardName:
+    Description: "Dashboard Name"
+    Type: String
+    AllowedPattern: ^[0-9a-zA-Z-_]{1,255}$
+    ConstraintDescription: "The maximum length is 255, and valid characters are A-Z, a-z, 0-9, '-', and '_'"
+  GatewayId:
+    Description: "SiteWise Edge Gateway Id"
+    Type: String
+    AllowedPattern: ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$
+    ConstraintDescription: "Fixed length of 36 SiteWise Gateway Id"
+
+Resources:
+  SiteWiseEdgeDemoDashboard:
+    Type: AWS::CloudWatch::Dashboard
+    Properties:
+      DashboardName: !Ref DashboardName
+      DashboardBody: !Sub |
+        {
+            "widgets": [
+                {
+                    "height": 6,
+                    "width": 12,
+                    "y": 0,
+                    "x": 0,
+                    "type": "metric",
+                    "properties": {
+                        "view": "timeSeries",
+                        "stacked": false,
+                        "metrics": [
+                            [ "AWS/IoTSiteWise", "IoTSiteWisePublisher.PublisherMessagesRemaining", "GatewayId", "${GatewayId}" ]
+                        ],
+                        "region": "us-west-2"
+                    }
+                },
+                {
+                    "type": "metric",
+                    "x": 12,
+                    "y": 0,
+                    "width": 12,
+                    "height": 6,
+                    "properties": {
+                        "view": "timeSeries",
+                        "stacked": false,
+                        "metrics": [
+                            [ "AWS/IoTSiteWise", "OpcUaCollector.IncomingValuesCount", "GatewayId", "${GatewayId}" ],
+                            [ ".", "IoTSiteWisePublisher.PublishSuccessCount", ".", "." ]
+                        ],
+                        "region": "us-west-2"
+                    }
+                },
+                {
+                    "type": "metric",
+                    "x": 0,
+                    "y": 6,
+                    "width": 24,
+                    "height": 6,
+                    "properties": {
+                        "view": "timeSeries",
+                        "stacked": false,
+                        "metrics": [
+                            [ "AWS/IoTSiteWise", "Gateway.DataProcessor.IngestionThrottled", "GatewayId", "${GatewayId}", "ThrottledAt", "SiteWiseEdgeStream" ]
+                        ],
+                        "region": "us-west-2"
+                    }
+                },
+                {
+                    "type": "metric",
+                    "x": 0,
+                    "y": 24,
+                    "width": 24,
+                    "height": 6,
+                    "properties": {
+                        "view": "timeSeries",
+                        "stacked": false,
+                        "metrics": [
+                            [ "AWS/IoTSiteWise", "Gateway.DataProcessor.MeasurementRejected", "GatewayId", "${GatewayId}", "Reason", "TimeStampOutOfRange" ],
+                            [ ".", "Gateway.DataProcessor.ProcessingError", ".", ".", ".", "InternalError" ],
+                            [ ".", "Gateway.DataProcessor.MeasurementRejected", ".", ".", ".", "InvalidRequest" ],
+                            [ "...", "ResourceNotFound" ]
+                        ],
+                        "region": "us-west-2",
+                        "title": "Data Processor Meassurement Errors",
+                        "period": 300
+                    }
+                },
+                {
+                    "type": "metric",
+                    "x": 0,
+                    "y": 18,
+                    "width": 12,
+                    "height": 6,
+                    "properties": {
+                        "view": "timeSeries",
+                        "stacked": false,
+                        "metrics": [
+                            [ "AWS/IoTSiteWise", "IoTSiteWisePublisher.PublishRejectedCount", "GatewayId", "${GatewayId}" ]
+                        ],
+                        "region": "us-west-2"
+                    }
+                },
+                {
+                    "type": "metric",
+                    "x": 12,
+                    "y": 18,
+                    "width": 12,
+                    "height": 6,
+                    "properties": {
+                        "view": "timeSeries",
+                        "stacked": false,
+                        "metrics": [
+                            [ "AWS/IoTSiteWise", "IoTSiteWisePublisher.PublishFailureCount", "GatewayId", "${GatewayId}" ]
+                        ],
+                        "region": "us-west-2"
+                    }
+                },
+                {
+                    "type": "metric",
+                    "x": 0,
+                    "y": 12,
+                    "width": 24,
+                    "height": 6,
+                    "properties": {
+                        "view": "timeSeries",
+                        "stacked": false,
+                        "metrics": [
+                            [ "AWS/IoTSiteWise", "OpcUaCollector.ConversionErrors", "GatewayId", "${GatewayId}" ]
+                        ],
+                        "region": "us-west-2"
+                    }
+                }
+            ]
+        }

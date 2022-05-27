@@ -64,7 +64,7 @@ Greengrass can be installed in linux and windows platforms such as EC2 instance 
 
 In this tutorial, we are going to run IoT Greengrass in a docker contains following the instructions [here](https://docs.aws.amazon.com/greengrass/v2/developerguide/build-greengrass-dockerfile.html).
 
-**1.1 - create docker image**
+##### **1.1 - create docker image**
 
 ```bash
 # Download AWS IoT Greengrass dockerfile package from github https://github.com/aws-greengrass/aws-greengrass-docker/releases
@@ -80,7 +80,7 @@ $ docker-compose -f docker-compose.yml build
 
 
 
-**1.2 run AWS IoT Greengrass in docker with automatic provisioning.**
+##### **1.2 run AWS IoT Greengrass in docker with automatic provisioning.**
 
 Create .env in the aws-greengrass-docker-2.5.3:
 
@@ -119,6 +119,28 @@ services:
 
 
 
+You could also create the image yourself from a Dockerfile like:
+
+```yaml
+version: '3.7'
+ 
+services:
+  greengrass:
+    init: true
+    container_name: aws-iot-greengrass
+    #image: amazon/aws-iot-greengrass:2.5.3-0
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - ./greengrass-v2-credentials:/root/.aws/:ro
+    env_file: .env
+    ports:
+      - "8883:8883"
+```
+
+
+
 In order to run the docker container, you should run the command:
 
 ```bash
@@ -127,10 +149,10 @@ $ docker-compose -f docker-compose.yml up -d --build
 
 
 
-Check your container id using docker ps, and access the container running:
+Check your container id using *docker ps*, and access the container running:
 
 ```bash
-$ docker exec -it dab39303b540 /bin/bash
+$ docker exec -it dd034cd4aaa1 /bin/bash
 ```
 
 
@@ -148,6 +170,16 @@ Tips to troubleshoot AWS IoT Greengrass in a Docker container can be found [here
 You should now be able to see your greengrass core device with name "MyGreengrassCore" under AWS IoT -> Greengrass-> Core devices, like:
 
 ![image-20220525144155119](README.assets/image-20220525144155119.png)
+
+
+
+###### 1.2.1 Installing dependencies
+
+The custom made component that ties Stream Manager with Kinesis is written in python and needs the Stream Manager SDK, which can be installed inside the container with the command:
+
+```bash
+$ pip3 install stream_manager
+```
 
 
 
@@ -213,16 +245,18 @@ No need to have data processing package as we are not doing any transformation t
 
 
 
-![image-20220525163301806](README.assets/image-20220525163301806.png)
+![image-20220525165724304](README.assets/image-20220525165724304.png)
 
 
 
 #### 2- Check Opcua messages on StreamManager
 
+Log files for Greengrass and SiteWise components are stored in the directory `/greengrass/v2/logs`
+
 You can check the opcua messages arriving in the StreamManager component at greengrass/v2/work/aws.greengrass.StreamManager/SiteWise_StreamManager1/, like:
 
 ```bash
-$ tail -f  greengrass/v2/work/aws.greengrass.StreamManager/SiteWise_StreamManager1/0000000000000000000.log
+$ tail -f  greengrass/v2/work/aws.greengrass.StreamManager/SomeStream1/0000000000000000000.log
 ```
 
 A screenshot of the output looks like:
@@ -231,7 +265,12 @@ A screenshot of the output looks like:
 
 
 
+Some other important log files are:
 
+- **greengrass.log**: Logs for AWS IoT Greengrass
+- **aws.iot.SiteWiseEdgeCollectorOpcua.log**: Logs for the SiteWise component which collects data from OPC-UA servers
+- **aws.iot.SiteWiseEdgeProcessor.log**: Logs for the SiteWise data processing pack. This logs contains mainly information about downloading and spinning up container.
+- **aws.iot.SiteWiseEdgePublisher.log**: Logs for the SiteWise component that sends data to the SiteWise data store in the Cloud.
 
 ## Docker Extras for Amazon linux image:
 

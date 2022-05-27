@@ -1,3 +1,7 @@
+#Removing credentials
+aws-greengrass-docker-2.5.3/greengrass-v2-credentials
+
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

@@ -1,6 +1,10 @@
 #Removing credentials
 aws-greengrass-docker-2.5.3/greengrass-v2-credentials
 
+#Removing nodejs installation
+myopcuaserver/node_modules/*
+
+.DS_Store
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
